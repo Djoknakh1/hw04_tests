@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+{% extends "base.html" %} 
+<html lang="ru"> 
+  <head>  
+    <!-- Подключены иконки, стили и заполенены мета теги -->
+    {% block content %}
+    {% for post in page_obj %}  
+    {% if forloop.first %}
+    <title>Профайл пользователя {{post.author}}</title>
+  </head>
+  <body>       
+    <header>
+   
+    </header>
+    <main>
+      <div class="container py-5">  
+        <h1>Все посты пользователя {{post.author}} </h1>
+         
+
+        <h3>Всего постов: {{count}} </h3>
+        {% endif %}   
+        <article>
+          <ul>
+            <li>
+ 
+
+              Автор: <!--Лев Толстой-->
+              <a href="<!-- -->">все посты пользователя {{post.author}}</a>
+            </li>
+            <li>
+              Дата публикации: <!-- 31 июля 1854 --> 
+            </li>
+          </ul>
+          <p>
+            {{post.text}}
+            <hr>
+          {% endfor %}
+          {% include 'posts/includes/paginator.html' %}
+          </p>
+          <a href="<!-- -->">подробная информация </a>
+        </article>       
+        <a href="<!-- -->">все записи группы</a>        
+        <hr>
+        <!-- Остальные посты. после последнего нет черты -->
+        <!-- Здесь подключён паджинатор -->  
+      </div>
+    </main>
+  </body>
+  {% endblock content %}
+</html> 
