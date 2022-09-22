@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
@@ -7,6 +6,7 @@ from ..models import Group, Post
 User = get_user_model()
 
 class PostModelTest(TestCase):
+
     @classmethod
     def setUpClass(cls):
         '''Создание тестовых записей в БД'''
@@ -14,15 +14,15 @@ class PostModelTest(TestCase):
 
         cls.post_author = User.objects.create_user(username="test_author")
         cls.group = Group.objects.create(
-            title = "Иван Иванович",
-            slug = "ivan_ivanovich",
-            description = "Группа Ивана Ивановича",
+            title="Иван Иванович",
+            slug="ivan_ivanovich",
+            description="Группа Ивана Ивановича",
         )
 
         cls.post = Post.objects.create(
-            text = "Рандомный текст",
-            group = cls.group,
-            author = cls.post_author,
+            text="Рандомный текст",
+            group=cls.group,
+            author=cls.post_author,
         )
 
     def test_verbose_name(self):
@@ -38,7 +38,6 @@ class PostModelTest(TestCase):
                 self.assertEqual(
                     post._meta.get_field(value).verbose_name, expected)
 
-        group = PostModelTest.group
         field_verboses = {
             'title': 'Название группы',
             'slug': 'Слаг',
@@ -61,7 +60,6 @@ class PostModelTest(TestCase):
                     self.assertEqual(
                         post._meta.get_field(value).help_text, expected)
 
-            group = PostModelTest.group
             field_help_texts = {
                 'slug': 'Слаг группы',
             }
@@ -81,3 +79,4 @@ class PostModelTest(TestCase):
         post = PostModelTest.post
         post_str = post.text
         self.assertEqual(post_str, str(post))
+        
