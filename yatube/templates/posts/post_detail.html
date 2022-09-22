@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block title %}{{post|truncatechars:30}}{% endblock %}
+{% block content %}
 <html lang="ru">
   <head>
     <!-- Подключены иконки, стили и заполенены мета теги -->
@@ -10,14 +12,7 @@
   </head>
   <body>
     <header>
-      <nav class="navbar navbar-light" style="background-color: lightskyblue">
-        <div class="container">
-          <a class="navbar-brand" href="/">
-            <img src="/static/img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-            <span style="color:red">Ya</span>tube
-          </a>
-        </div>
-      </nav>      
+
     </header>
     <main>
       {% for post in posts %}
@@ -56,11 +51,5 @@
           <p>
 
           </p>
-        </article>
-      </div> 
-    </main>
-    <footer class="border-top text-center py-3">
-      <p>© <!--2021 --> Copyright <span style="color:red">Ya</span>tube</p>
-    </footer>
-  </body>
-</html> 
+
+{% endblock %}

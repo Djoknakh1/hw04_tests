@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
+
 from .forms import PostForm
 from .models import Post, Group, User
 
@@ -65,7 +66,7 @@ def post_detail(request, post_id):
         "count": count,
         "posts": posts,
     }
-    return render(request, "posts/post_detail.html", context=context)
+    return render(request, "posts/post_detail.html", context)
 
 
 @login_required
