@@ -17,7 +17,6 @@ class PostPagesTests(TestCase):
             title="Тестовая группа",
             slug="test-slug",
         )
-        post_objs = []
         for i in range(15):
             Post.objects.create(
                 id=i,
