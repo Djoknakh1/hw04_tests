@@ -29,7 +29,7 @@ class PostModelTest(TestCase):
         self.assertEqual(group_str, str(group))
 
         post = PostModelTest.post
-        post_str = post.text[: settings.NAME_LIMIT]
+        post_str = post.text
         self.assertIn(post_str, str(post))
 
     def test_verbose_name(self):
@@ -37,8 +37,6 @@ class PostModelTest(TestCase):
         post = PostModelTest.post
         field_verboses = {
             "text": "Текст поста",
-            "pub_date": "Дата публикации",
-            "author": "Автор",
             "group": "Группа",
         }
         for value, expected in field_verboses.items():

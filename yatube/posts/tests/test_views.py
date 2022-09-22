@@ -19,15 +19,12 @@ class PostPagesTests(TestCase):
         )
         post_objs = []
         for i in range(15):
-            post_objs.append(
-                Post(
-                    id=i,
-                    text=f"Пост №{i+1}",
-                    author=User.objects.get(username="Bazz"),
-                    group=Group.objects.get(slug="test-slug"),
-                )
+            Post.objects.create(
+                id=i,
+                text=f"Пост №{i+1}",
+                author=User.objects.get(username="Bazz"),
+                group=Group.objects.get(slug="test-slug"),
             )
-        Post.objects.bulk_create(post_objs)
         cls.templates_pages_names = {
             reverse("posts:index"): "posts/index.html",
             reverse(
@@ -106,7 +103,7 @@ class PostPagesTests(TestCase):
         response = self.client.get(
             reverse("posts:post_detail", kwargs={"post_id": 14})
         )
-        obj = response.context["post"]
+        obj = response.context["post_alone"]
         fields = {
             obj.id: 14,
             obj.text: "Пост №15",
