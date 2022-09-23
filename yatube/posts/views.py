@@ -1,16 +1,14 @@
-from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-
+from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import PostForm
-from .models import Post, Group, User
+from .models import Group, Post, User
 
 PER_PAGE = 10
 
 
-def paginate(request):
-    post_list = Post.objects.all()
+def paginate(request, post_list):
     paginator = Paginator(post_list, PER_PAGE)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -18,7 +16,8 @@ def paginate(request):
 
 
 def index(request):
-    page_obj = paginate(request)
+    post_list = Post.objects.all()
+    page_obj = paginate(request, post_list)
     # Отдаем в словаре контекста
     context = {
         "page_obj": page_obj,
@@ -28,12 +27,11 @@ def index(request):
 
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
-    page_obj = paginate(request)
+    post_list = group.posts.all()
+    page_obj = paginate(request, post_list)
 
-    posts = group.posts.all()[:PER_PAGE]
     context = {
         "group": group,
-        "posts": posts,
         "page_obj": page_obj,
     }
     return render(request, "posts/group_list.html", context)
@@ -43,9 +41,8 @@ def profile(request, username):
     # Здесь код запроса к модели и создание словаря контекста
     author = get_object_or_404(User, username=username)
     posts = Post.objects.filter(author__username=username)
-    paginator = Paginator(posts, PER_PAGE)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
+
+    page_obj = paginate(request, posts)
 
     count = posts.count()
     context = {
@@ -59,12 +56,10 @@ def profile(request, username):
 def post_detail(request, post_id):
     # Здесь код запроса к модели и создание словаря контекста
     post_alone = get_object_or_404(Post, pk=post_id)
-    posts = Post.objects.filter(pk=post_id)
     count = Post.objects.filter(author=post_alone.author).count()
     context = {
         "post_alone": post_alone,
         "count": count,
-        "posts": posts,
     }
     return render(request, "posts/post_detail.html", context)
 

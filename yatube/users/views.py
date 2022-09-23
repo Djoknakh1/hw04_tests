@@ -1,17 +1,14 @@
-from django.shortcuts import render
+from django.core.mail import BadHeaderError, send_mail
 from django.http import HttpResponse
-
-# Create your views here.
-from django.views.generic import CreateView
-
-
+from django.shortcuts import render
 # Функция reverse_lazy позволяет получить URL по параметрам функции path()
 # Берём, тоже пригодится
 from django.urls import reverse_lazy
+# Create your views here.
+from django.views.generic import CreateView
 
 # Импортируем класс формы, чтобы сослаться на неё во view-классе
 from .forms import CreationForm
-from django.core.mail import send_mail, BadHeaderError
 
 
 class SignUp(CreateView):

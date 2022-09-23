@@ -12,21 +12,22 @@ class PostPagesTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        User.objects.create(username="Bazz")
+        User.objects.create_user(username="Bazz")
         Group.objects.create(
             title="Тестовая группа",
             slug="test-slug",
         )
-        post_objs = [
-            Post(
-                text=f"Пост №{i+1}",
-                author=User.objects.get(username="Bazz"),
-                group=Group.objects.get(slug="test-slug"),
+        post_objs = []
+        for i in range(15):
+            post_objs.append(
+                Post(
+                    id=i,
+                    text=f"Пост №{i+1}",
+                    author=User.objects.get(username="Bazz"),
+                    group=Group.objects.get(slug="test-slug"),
+                )
             )
-            for i in range(15)
-        ]
         Post.objects.bulk_create(post_objs)
-        cls.last_post_id = Post.objects.latest("pub_date").id
         cls.templates_pages_names = {
             reverse("posts:index"): "posts/index.html",
             reverse(
@@ -34,12 +35,10 @@ class PostPagesTests(TestCase):
             ): "posts/group_list.html",
             reverse("posts:post_create"): "posts/create_post.html",
             reverse(
-                "posts:post_detail",
-                kwargs={"post_id": PostPagesTests.last_post_id},
+                "posts:post_detail", kwargs={"post_id": 10}
             ): "posts/post_detail.html",
             reverse(
-                "posts:post_edit",
-                kwargs={"post_id": PostPagesTests.last_post_id},
+                "posts:post_edit", kwargs={"post_id": 10}
             ): "posts/create_post.html",
             reverse(
                 "posts:profile",
@@ -67,12 +66,7 @@ class PostPagesTests(TestCase):
         """Проверяем что paginator работает
         на страницах профиля, групп, главной и они отсортированы по дате
         создания"""
-        FIELDS = [
-            PostPagesTests.last_post_id,
-            f"Пост №{PostPagesTests.last_post_id}",
-            self.user,
-            self.group,
-        ]
+        FIELDS = [14, "Пост №15", self.user, self.group]
         view_funcs = {
             reverse("posts:index"): "?page=2",
             reverse(
@@ -110,15 +104,12 @@ class PostPagesTests(TestCase):
     def test_post_detail(self):
         """Проверяем словарь подробной информации о записи"""
         response = self.client.get(
-            reverse(
-                "posts:post_detail",
-                kwargs={"post_id": PostPagesTests.last_post_id},
-            )
+            reverse("posts:post_detail", kwargs={"post_id": 14})
         )
-        obj = response.context["post_alone"]
+        obj = response.context["post"]
         fields = {
-            obj.id: PostPagesTests.last_post_id,
-            obj.text: f"Пост №{PostPagesTests.last_post_id}",
+            obj.id: 14,
+            obj.text: "Пост №15",
             obj.author: self.user,
             obj.group: self.group,
         }
@@ -126,12 +117,10 @@ class PostPagesTests(TestCase):
             self.assertEqual(field, correct_field)
 
     def test_form_post_creation(self):
-        FIELDS = [
-            "Test post creation",
-            self.user,
-            self.group,
-        ]
-        Post.objects.create(text=FIELDS[0], author=FIELDS[1], group=FIELDS[2])
+        FIELDS = [15, "Test post creation", self.user, self.group]
+        Post.objects.create(
+            id=FIELDS[0], text=FIELDS[1], author=FIELDS[2], group=FIELDS[3]
+        )
         view_funcs = [
             reverse("posts:index"),
             reverse("posts:group_list", kwargs={"slug": "test-slug"}),
@@ -141,6 +130,7 @@ class PostPagesTests(TestCase):
             with self.subTest(reverse_name=reverse_name):
                 response = self.authorized_client.get(reverse_name)
                 first_object = response.context["page_obj"][0]
-                self.assertEqual(first_object.text, FIELDS[0])
-                self.assertEqual(first_object.author, FIELDS[1])
-                self.assertEqual(first_object.group, FIELDS[2])
+                self.assertEqual(first_object.id, FIELDS[0])
+                self.assertEqual(first_object.text, FIELDS[1])
+                self.assertEqual(first_object.author, FIELDS[2])
+                self.assertEqual(first_object.group, FIELDS[3])

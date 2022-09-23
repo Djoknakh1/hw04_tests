@@ -7,6 +7,8 @@ User = get_user_model()
 
 
 class PostModelTest(TestCase):
+    NUM_POST = 15
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -21,14 +23,16 @@ class PostModelTest(TestCase):
             text="Тестовый пост",
         )
 
-    def test_models_have_correct_object_names(self):
+    def test_group_have_correct_object_names(self):
         """Проверяем, что у моделей корректно работает __str__."""
         group = PostModelTest.group
         group_str = group.title
         self.assertEqual(group_str, str(group))
 
+    def test_post_have_correct_object_names(self):
+
         post = PostModelTest.post
-        post_str = post.text
+        post_str = post.text[: self.NUM_POST]
         self.assertIn(post_str, str(post))
 
     def test_verbose_name(self):
