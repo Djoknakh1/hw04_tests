@@ -68,6 +68,6 @@ class PostCreateFormTests(TestCase):
 
         self.assertTrue(
             Post.objects.filter(
-                id=self.post_id, text="Редактированный текст"
+                id=self.post_id, text=form_data["text"]
             ).exists()
         )

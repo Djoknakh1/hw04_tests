@@ -40,7 +40,7 @@ def group_posts(request, slug):
 def profile(request, username):
     # Здесь код запроса к модели и создание словаря контекста
     author = get_object_or_404(User, username=username)
-    posts = Post.objects.filter(author__username=username)
+    posts = author.posts.filter(author__username=username)
 
     page_obj = paginate(request, posts)
 

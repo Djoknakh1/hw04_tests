@@ -23,15 +23,12 @@
           </p>
           <a href="{% url 'posts:post_detail' post.id %}">подробная информация </a>
         </article> 
-        {% if post.group %}   
-        <a href="{% url 'posts:group_list' post.group.slug %}">все записи группы: {{post.group.title}}</a>
-        {% endif %}       
-        <hr>
-        {% endfor %}
-        <!-- Здесь подключён паджинатор -->  
+          {% if post.group %}   
+            <a href="{% url 'posts:group_list' post.group.slug %}">все записи группы: {{post.group.title}}</a>
+          {% endif %}       
+          {% if not forloop.last %}
+            <hr>
+          {% endif %}
+         {% endfor %}
         {% include 'posts/includes/paginator.html'%}
-      </div>
-    </main>
-  </body>
-  {% endblock content %}
-</html> 
+   {% endblock content %}

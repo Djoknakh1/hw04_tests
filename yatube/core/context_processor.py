@@ -1,5 +1,5 @@
 import datetime
 
 
-def CurrentDate(request):
-    return {"date": datetime.date.today().year}
+def сurrent_date(request):
+    return {"year": datetime.date.today().year}
